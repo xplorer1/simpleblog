@@ -35,13 +35,16 @@ class StatikComponent extends React.Component {
 						<div className="collapse navbar-collapse" id="navbarResponsive">
 							<ul className="navbar-nav ml-auto">
 								<li className="nav-item">
-									<a className="nav-link" href="about.html">About</a>
+									<Link className="nav-link" to="/about">About</Link>
 								</li>
 								<li className="nav-item">
 									<a className="nav-link" href="post.html">Sample Post</a>
 								</li>
 								<li className="nav-item">
-									<a className="nav-link" href="contact.html">Contact</a>
+									<Link className="nav-link" to="/contactme">Contact</Link>
+								</li>
+								<li className="nav-item">
+									<Link className="nav-link" to="login">Logina</Link>
 								</li>
 							</ul>
 						</div>
