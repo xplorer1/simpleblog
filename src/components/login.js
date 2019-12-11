@@ -9,9 +9,33 @@ class Login extends React.Component {
 	render() {
 		return (
 			<article>
+				{/* Navigation */}
+                <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+                    <div className="container">
+                        <Link className="navbar-brand" to="/" id="nav1">My Blog</Link>
+                        <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                            Menu
+                            <i className="fas fa-bars"></i>
+                        </button>
+                        <div className="collapse navbar-collapse" id="navbarResponsive">
+
+                            <ul className="navbar-nav ml-auto">
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/about" id="nav2">About</Link>
+                                </li>
+
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/contactme" id="nav3">Contact</Link>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
                 <div className="limiter">
                     <div className="container-login100">
-                        <div className="wrap-login100">
+                        <div className="wrap-login100" style={{position: "relative", top: "5rem"}}>
                             <form className="login100-form validate-form">
                                 <span className="login100-form-title p-b-34">
                                     Account Login
@@ -47,7 +71,6 @@ class Login extends React.Component {
                         </div>
                     </div>
                 </div>
-                
 			</article>
 		)
 	}

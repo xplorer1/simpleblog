@@ -119,6 +119,11 @@ img::-moz-selection {
     border-bottom: 1px solid transparent;
     background: transparent;
   }
+
+  #nav1, #nav2, #nav3 {
+    color: #343a40 !important;
+  }
+
   #mainNav .navbar-brand {
     padding: 10px 20px;
     color: #fff;

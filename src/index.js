@@ -5,6 +5,7 @@ import About from "./components/about";
 import {Home} from "./components/homecomponent";
 import ContactMe from "./components/contactme";
 import Login from "./components/login";
+import Post from "./components/post";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
 				<Route path="/about" component = {About} />
 				<Route path="/contactme" component = {ContactMe} />
 				<Route path="/login" component = {Login} />
+				<Route path="/post" component = {Post} />
 			</Switch>
         </Router>
     )
