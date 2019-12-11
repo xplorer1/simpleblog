@@ -46,9 +46,9 @@ class CreatePost extends React.Component {
                                     <input type="text" className="form-control" name="title" />
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="exampleFormControlFile1">Upload media</label>
-                                    <input type="file" class="form-control-file" id="exampleFormControlFile1" />
+                                <div className="form-group">
+                                    <label htmlFor="exampleFormControlFile1">Upload media</label>
+                                    <input type="file" className="form-control-file" id="exampleFormControlFile1" />
                                 </div>
                                 
                                 <div className="form-group">

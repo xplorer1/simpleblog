@@ -464,3 +464,7 @@ footer .copyright {
     background: white;
     margin-top: 5rem;
 }
+
+.nav-link {
+  cursor: pointer;
+}

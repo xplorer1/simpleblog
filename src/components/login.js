@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {Loader} from "./homecomponent";
+import {Loader} from "./home";
 
 class Login extends React.Component {
 	constructor() {

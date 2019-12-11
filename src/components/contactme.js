@@ -28,7 +28,7 @@ class ContactMe extends React.Component {
 				{/* Navigation */}
 				  <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
 				    <div className="container">
-				      <a className="navbar-brand" href="index.html">My Blog</a>
+				      <Link className="navbar-brand" to="/">My Blog</Link>
 				      <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 				        Menu
 				        <i className="fas fa-bars"></i>
@@ -45,11 +45,11 @@ class ContactMe extends React.Component {
 				          </li>
 
 				          <li className="nav-item">
-				            <Link className="nav-link" to="/login">Login</Link>
+				            <Link className="nav-link" to="/signup">Sign Up</Link>
 				          </li>
 
 				          <li className="nav-item">
-							<Link className="nav-link" to="/signup">Post to my blog?</Link>
+							<a className="nav-link" data-toggle="modal" data-target="#myModal">Post to my blog?</a>
 						</li>
 
 				        </ul>
@@ -159,6 +159,34 @@ class ContactMe extends React.Component {
       </div>
     </div>
   </footer>
+
+  			<div id="myModal" className="modal fade" role="dialog">
+					<div className="modal-dialog">
+
+						<div className="modal-content">
+							<div className="modal-header">
+								<h5 className="modal-title" id="exampleModalLongTitle">Enter your password.</h5>
+								<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+							</div>
+
+							<div className="modal-body">
+								<div className="">Are you registered? <br />Enter your password to write and publish.</div>
+
+								<div className="form-group">
+                                    <label htmlFor="your_pass"></label>
+                                    <input type="password" name="your_pass" id="your_pass" placeholder="Password" className="cust-btn" />
+                                </div>
+							</div>
+
+							<div className="modal-footer">
+								<Link type="button" className="btn btn-primary" to="/createpost">Login</Link>
+								<button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</article>
 		)
 	}
