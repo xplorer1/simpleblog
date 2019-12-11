@@ -11,7 +11,7 @@ class CreatePost extends React.Component {
 			<article style={{background: "#f8f8f8"}}>
                 <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
                     <div className="" style={{display: "flex", width: "100%"}}>
-                        <a className="navbar-brand" href="index.html" style={{color: "black"}}>My Blog</a>
+                        <Link className="navbar-brand" to="/" style={{color: "black"}}>My Blog</Link>
                         <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                             Menu
                             <i className="fas fa-bars"></i>
@@ -41,15 +41,14 @@ class CreatePost extends React.Component {
                             
                             <form action="" method="POST">
                                 
-                                <div className="form-group has-error">
-                                    <label htmlFor="slug">Slug <span className="require">*</span> <small>(This field use in url path.)</small></label>
-                                    <input type="text" className="form-control" name="slug" />
-                                    <span className="help-block">Field not entered!</span>
-                                </div>
-                                
                                 <div className="form-group">
                                     <label htmlFor="title">Title <span className="require">*</span></label>
                                     <input type="text" className="form-control" name="title" />
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Upload media</label>
+                                    <input type="file" class="form-control-file" id="exampleFormControlFile1" />
                                 </div>
                                 
                                 <div className="form-group">
@@ -58,9 +57,9 @@ class CreatePost extends React.Component {
                                 </div>
                                 
                                 <div className="form-group">
-                                    <button type="submit" className="btn btn-primary">
+                                    <Link type="submit" className="btn btn-primary" to="/post">
                                         Create
-                                    </button>
+                                    </Link>
                                     <button className="btn btn-default">
                                         Cancel
                                     </button>
