@@ -32,6 +32,10 @@ class About extends React.Component {
             <Link className="nav-link" to="/login">Login</Link>
           </li>
 
+          <li className="nav-item">
+				<Link className="nav-link" to="/signup">Post to my blog?</Link>
+		  </li>
+
         </ul>
       </div>
     </div>

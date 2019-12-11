@@ -1,19 +1,25 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import {Loader} from "./homecomponent";
 
 class Login extends React.Component {
 	constructor() {
 		super();
+
+        this.state = {showLoader: true};
 	}
 
 	render() {
 		return (
 			<article>
+            {this.state.showLoader === true && <Loader />}
+            <link href="assets/css/login.css" rel="stylesheet" />
+
 				{/* Navigation */}
-                <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-                    <div className="container">
+                <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav" style={{position: "relative", marginBottom: "2rem"}}>
+                    <div className="containerr" style={{display: "flex", width: "100%"}}>
                         <Link className="navbar-brand" to="/" id="nav1">My Blog</Link>
-                        <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <button style={{position: "absolute", right: "1rem"}} className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                             Menu
                             <i className="fas fa-bars"></i>
                         </button>
@@ -33,47 +39,60 @@ class Login extends React.Component {
                     </div>
                 </nav>
 
-                <div className="limiter">
-                    <div className="container-login100">
-                        <div className="wrap-login100" style={{position: "relative", top: "5rem"}}>
-                            <form className="login100-form validate-form">
-                                <span className="login100-form-title p-b-34">
-                                    Account Login
-                                </span>
-                                
-                                <div className="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="Type user name">
-                                    <input id="first-name" className="input100" type="text" name="username" placeholder="User name" />
-                                    <span className="focus-input100"></span>
-                                </div>
-                                <div className="wrap-input100 rs2-wrap-input100 validate-input m-b-20" data-validate="Type password" >
-                                    <input className="input100" type="password" name="pass" placeholder="Password" />
-                                    <span className="focus-input100"></span>
-                                </div>
-                                
-                                <div className="container-login100-form-btn">
-                                    <button className="login100-form-btn">
-                                        Sign in
-                                    </button>
-                                </div>
+                <section className="sign-in">
+                    <div className="container">
+                        <div className="signin-content">
+                            <div className="signin-image">
+                                <figure><img src="assets/img/signin-image.jpg" alt="sing up image" /></figure>
+                                <Link to="/signup" className="signup-image-link">Create an account</Link>
+                            </div>
 
-                                <div className="w-full text-center p-t-27 p-b-239">
-                                    <span className="txt1">
-                                        Forgot
-                                    </span>
-
-                                    <a href="#" className="txt2">
-                                        User name / password?
-                                    </a>
+                            <div className="signin-form">
+                                <h2 className="form-title">Sign in</h2>
+                                <form method="POST" className="register-form" id="login-form">
+                                    <div className="form-group">
+                                        <label htmlFor="your_name"><i className="zmdi zmdi-account material-icons-name"></i></label>
+                                        <input type="text" name="your_name" id="your_name" placeholder="Your Name"/>
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="your_pass"><i className="zmdi zmdi-lock"></i></label>
+                                        <input type="password" name="your_pass" id="your_pass" placeholder="Password"/>
+                                    </div>
+                                    <div className="form-group">
+                                        <input type="checkbox" name="remember-me" id="remember-me" className="agree-term" />
+                                        <label htmlFor="remember-me" className="label-agree-term"><span><span></span></span>Remember me</label>
+                                    </div>
+                                    <div className="form-group form-button">
+                                        <input type="submit" name="signin" id="signin" className="form-submit" value="Log in"/>
+                                    </div>
+                                </form>
+                                <div className="social-login">
+                                    <span className="social-label">Or login with</span>
+                                    <ul className="socials">
+                                        <li><a href="#"><i className="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                        <li><a href="#"><i className="display-flex-center zmdi zmdi-twitter"></i></a></li>
+                                        <li><a href="#"><i className="display-flex-center zmdi zmdi-google"></i></a></li>
+                                    </ul>
                                 </div>
-                            </form>
-
-                            <div className="login100-more" style={{backgroundImage: "url('assets/img/bg-01.jpg')"}}></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </section>
+
 			</article>
 		)
 	}
+
+    componentDidMount() {
+
+        setTimeout(function() {
+            console.log("state: ", this.state)
+            this.setState({showLoader: false})
+            //this.state.showLoader=false;
+        }.bind(this), 2000, this.state.showLoader);
+
+        console.log("after state: ", this.state)
+    }
 }
 
 export default Login;

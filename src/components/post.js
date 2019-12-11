@@ -28,6 +28,10 @@ class Post extends React.Component {
           <li className="nav-item">
             <Link className="nav-link" to="/login">Login</Link>
           </li>
+
+          <li className="nav-item">
+            <Link className="nav-link" to="/signup">Post to my blog?</Link>
+        </li>
         </ul>
       </div>
     </div>
@@ -43,7 +47,7 @@ class Post extends React.Component {
             <h1>Man must explore, and this is exploration at its greatest</h1>
             <h2 className="subheading">Problems look mighty small from 150 miles up</h2>
             <span className="meta">Posted by
-              <a href="#">Start Bootstrap</a>
+              <a href="#">Chijioke</a>
               on August 24, 2019</span>
           </div>
         </div>
