@@ -13,6 +13,6 @@ apirouter.use(function(req, res, next) {
     next(); 
 });
 
-apirouter.get('/', GeneralController.index);
+apirouter.get('/api', GeneralController.index);
 
 module.exports = apirouter;
