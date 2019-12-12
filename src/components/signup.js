@@ -52,14 +52,16 @@ class SignUp extends React.Component {
             this.setState({ ajaxloading: true }, () => {
                 fetch(Utility.baseurl+"api/signup", fetchdata)
                     .then((response) => {
+                        this.setState({ajaxloading: false});
                         return response.json();
                     })
                     .then((data) => {
-                        this.setState({loading: false});
+                        this.setState({ajaxloading: false});
                         
                         console.log('data: ', data);
                     })
                     .catch((error) => {
+                        this.setState({ajaxloading: false});
                         console.log("error: ", error.message);
                     }) 
                 })
