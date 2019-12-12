@@ -11,6 +11,28 @@ function Loader() {
 	)
 }
 
+const Utility = {
+	baseurl: "http://localhost:8050/api/",
+
+	ajaxloader: function() {
+		return (
+			<div className='spinner-grow' role='status'> 
+				<span className='sr-only'>Loading...</span> 
+			</div>
+		)
+	},
+
+	pageloader: function() {
+		return (
+			<div id="preloader" >
+		        <div id="status">
+		        	<img src="assets/img/loadinganimation.gif" id="preloader_image" alt="loader" />
+		        </div>
+		    </div>
+		)
+	}
+}
+
 class StatikComponent extends React.Component {
 	constructor(props) {
 		super(props);
@@ -248,4 +270,4 @@ class Home extends React.Component {
 	}
 }
 
-export {Home, StatikComponent, Loader};
+export {Home, StatikComponent, Loader, Utility};

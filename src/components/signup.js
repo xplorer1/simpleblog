@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {Loader} from "./home";
-import Utility from "../utils";
+import {Loader, Utility} from "./home";
 
 class SignUp extends React.Component {
 	constructor() {
@@ -11,7 +10,8 @@ class SignUp extends React.Component {
             email: "",
             password: "",
             re_password: "",
-            showLoader: true
+            showLoader: true,
+            ajaxloading: false
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,6 +19,7 @@ class SignUp extends React.Component {
 	}
 
     handleSubmit(e) {
+
         e.preventDefault();
 
         if(!this.state.email) {
@@ -30,28 +31,38 @@ class SignUp extends React.Component {
         else if(!this.state.re_password) {
             alert("Please enter re_password.");
         }
+        else if(this.state.password.toString() !== this.state.re_password.toString()) {
+            alert("Passwords don't match.");
+        }
         else {
 
             console.log("got here.")
 
-            //this.setState({ loading: true }, () => {
-                /*fetch(url)
+            let data = {
+                email: this.state.email,
+                password: this.state.password
+            }
+
+            let fetchdata = {
+                method: 'POST', 
+                body: data,
+                headers: new Headers()
+            }
+
+            this.setState({ ajaxloading: true }, () => {
+                fetch(Utility.baseurl+"api/signup", fetchdata)
                     .then((response) => {
                         return response.json();
                     })
                     .then((data) => {
                         this.setState({loading: false});
-                        console.log("data: ", data[query]);
-
-                        this.setState({
-                            conversionvalue: (data[query]*this.state.amount),
-                            conversionrate: (data[query])
-                        })
+                        
+                        console.log('data: ', data);
                     })
                     .catch((error) => {
                         console.log("error: ", error.message);
-                    }) */
-                //})
+                    }) 
+                })
             }
     };
 
@@ -60,7 +71,6 @@ class SignUp extends React.Component {
             [e.target.name]: e.target.value
         });
     };
-
 
 	render() {
 		return (
@@ -99,7 +109,7 @@ class SignUp extends React.Component {
                             <div className="signup-content">
                                 <div className="signup-form">
                                     <h2 className="form-title">Sign up</h2>
-                                    <form method="POST" className="register-form" id="register-form">
+                                    <div className="register-form" id="register-form">
                                         <div className="form-group">
                                             <label htmlFor="email"><i className="zmdi zmdi-email"></i></label>
                                             <input type="email" name="email" id="email" placeholder="Your Email" onChange={this.handleInput} value={this.state.email}/>
@@ -118,10 +128,12 @@ class SignUp extends React.Component {
                                             <a className="term-service" data-toggle="modal" data-target="#exampleModalLong"> terms of service</a></label>
                                         </div>
                                         <div className="form-group form-button">
-                                            <input type="submit" name="signup" id="signup" className="form-submit" value="Register"/>
+                                            <input type="submit" name="signup" id="signup" className="form-submit" onClick={this.handleSubmit} />
+                                            {this.state.ajaxloading ? Utility.ajaxloader() : <div></div>}
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
+
                                 <div className="signup-image">
                                     <figure><img src="assets/img/signup-image.jpg" alt="sign up image" /></figure>
                                     <Link to="/login" className="signup-image-link">I am already member</Link>
@@ -176,7 +188,7 @@ class SignUp extends React.Component {
         setTimeout(function() {
             this.setState({showLoader: false})
             //this.state.showLoader=false;
-        }.bind(this), 1500, this.state.showLoader);
+        }.bind(this), 1000, this.state.showLoader);
 
         console.log("utils: ", Utility)
     }

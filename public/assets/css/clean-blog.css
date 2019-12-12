@@ -468,3 +468,7 @@ footer .copyright {
 .nav-link {
   cursor: pointer;
 }
+
+.spinner-grow {
+  vertical-align: middle !important;
+}
