@@ -1,5 +1,6 @@
 let User = require("../models/user");
 let config = require('./config');
+const mailer = require('../routes/mail');
 
 //return the index page.
 exports.index = (req, res) => {
