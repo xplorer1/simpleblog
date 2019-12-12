@@ -1,12 +1,66 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {Loader} from "./home";
+import Utility from "../utils";
 
 class SignUp extends React.Component {
 	constructor() {
 		super();
-        this.state = {showLoader: true};
+
+        this.state = {
+            email: "",
+            password: "",
+            re_password: "",
+            showLoader: true
+        }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleInput = this.handleInput.bind(this);
 	}
+
+    handleSubmit(e) {
+        e.preventDefault();
+
+        if(!this.state.email) {
+            alert("Please enter email.");
+        }
+        else if (!this.state.password) {
+            alert("Please enter password.");
+        }
+        else if(!this.state.re_password) {
+            alert("Please enter re_password.");
+        }
+        else {
+
+            console.log("got here.")
+
+            //this.setState({ loading: true }, () => {
+                /*fetch(url)
+                    .then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        this.setState({loading: false});
+                        console.log("data: ", data[query]);
+
+                        this.setState({
+                            conversionvalue: (data[query]*this.state.amount),
+                            conversionrate: (data[query])
+                        })
+                    })
+                    .catch((error) => {
+                        console.log("error: ", error.message);
+                    }) */
+                //})
+            }
+    };
+
+    handleInput(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    };
+
 
 	render() {
 		return (
@@ -47,20 +101,16 @@ class SignUp extends React.Component {
                                     <h2 className="form-title">Sign up</h2>
                                     <form method="POST" className="register-form" id="register-form">
                                         <div className="form-group">
-                                            <label htmlFor="name"><i className="zmdi zmdi-account material-icons-name" ></i></label>
-                                            <input type="text" name="name" id="name" placeholder="Your Name" />
-                                        </div>
-                                        <div className="form-group">
                                             <label htmlFor="email"><i className="zmdi zmdi-email"></i></label>
-                                            <input type="email" name="email" id="email" placeholder="Your Email"/>
+                                            <input type="email" name="email" id="email" placeholder="Your Email" onChange={this.handleInput} value={this.state.email}/>
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="pass"><i className="zmdi zmdi-lock"></i></label>
-                                            <input type="password" name="pass" id="pass" placeholder="Password"/>
+                                            <input type="password" name="password" id="pass" placeholder="Password" onChange={this.handleInput} value={this.state.password}/>
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="re-pass"><i className="zmdi zmdi-lock-outline"></i></label>
-                                            <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password"/>
+                                            <input type="password" name="re_password" id="re_pass" placeholder="Repeat your password"onChange={this.handleInput} value={this.state.re_password}/>
                                         </div>
                                         <div className="form-group">
                                             <input type="checkbox" name="agree-term" id="agree-term" className="agree-term" />
@@ -124,12 +174,11 @@ class SignUp extends React.Component {
     componentDidMount() {
 
         setTimeout(function() {
-            console.log("state: ", this.state)
             this.setState({showLoader: false})
             //this.state.showLoader=false;
-        }.bind(this), 2000, this.state.showLoader);
+        }.bind(this), 1500, this.state.showLoader);
 
-        console.log("after state: ", this.state)
+        console.log("utils: ", Utility)
     }
 }
 
