@@ -7,7 +7,7 @@ exports.index = (req, res) => {
 	//this is supposed to do something about home page.
 }
 
-exports.signup = (req, res) => {
+exports.signup = function(req, res) {
 	console.log("this is signup.", req.body)
 
 	if(!req.body.email) return res.json({status: false, data: "email_required"});

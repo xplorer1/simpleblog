@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {Loader, Utility} from "./home";
+import axios from "axios";
 
 class SignUp extends React.Component {
 	constructor() {
@@ -43,26 +44,37 @@ class SignUp extends React.Component {
                 password: this.state.password
             }
 
-            let fetchdata = {
-                method: 'POST', 
-                body: data,
-                headers: new Headers()
-            }
+            axios.post(Utility.baseurl + "signup", {
+                email: this.state.email,
+                password: this.state.password
+                })
+                .then((response) => {
+
+                    console.log(response);
+                }, (error) => {
+                    console.log(error);
+            });
 
             this.setState({ ajaxloading: true }, () => {
-                fetch(Utility.baseurl+"api/signup", fetchdata)
+
+                fetch(Utility.baseurl+"signup", {
+                        method: 'POST', 
+                        data: JSON.stringify(data),
+                        headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json',
+                        },
+                    })
                     .then((response) => {
                         this.setState({ajaxloading: false});
                         return response.json();
                     })
                     .then((data) => {
-                        this.setState({ajaxloading: false});
-                        
-                        console.log('data: ', data);
+                        this.setState({ajaxloading: false});                        
                     })
                     .catch((error) => {
                         this.setState({ajaxloading: false});
-                        console.log("error: ", error.message);
+                        console.log("erro: ", error.message);
                     }) 
                 })
             }
@@ -191,8 +203,6 @@ class SignUp extends React.Component {
             this.setState({showLoader: false})
             //this.state.showLoader=false;
         }.bind(this), 1000, this.state.showLoader);
-
-        console.log("utils: ", Utility)
     }
 }
 

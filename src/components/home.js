@@ -30,6 +30,37 @@ const Utility = {
 		        </div>
 		    </div>
 		)
+	},
+
+	nav: function() {
+		return(
+			<nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+				<div className="container">
+					<a className="navbar-brand" href="index.html">My Blog</a>
+					<button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+						Menu
+						<i className="fas fa-bars"></i>
+					</button>
+					<div className="collapse navbar-collapse" id="navbarResponsive">
+						<ul className="navbar-nav ml-auto">
+							<li className="nav-item">
+								<Link className="nav-link" to="/about">About</Link>
+							</li>
+							<li className="nav-item">
+								<Link className="nav-link" to="/contactme">Contact</Link>
+							</li>
+							<li className="nav-item">
+								<Link className="nav-link" to="/signup">Sign Up</Link>
+							</li>
+
+							<li className="nav-item">
+								<a className="nav-link" data-toggle="modal" data-target="#myModal">Post to my blog?</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</nav>
+		)
 	}
 }
 
@@ -86,7 +117,7 @@ class StatikComponent extends React.Component {
 						</div>
 					</div>
 				</nav>
-
+			
 				<header className="masthead" style={{backgroundImage: "url('assets/img/home-bg.jpg')"}}>
 					<div className="overlay"></div>
 					<div className="container">
@@ -254,7 +285,10 @@ class StatikComponent extends React.Component {
 			//this.state.showLoader=false;
 		}.bind(this), 2000, this.state.showLoader);
 
-		console.log("after state: ", this.state)
+		let Nav = Utility.nav;
+
+		console.log("nav: ", Nav)
+
 	}
 }
 

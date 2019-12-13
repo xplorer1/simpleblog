@@ -63,7 +63,7 @@ class Login extends React.Component {
                                         <label htmlFor="remember-me" className="label-agree-term"><span><span></span></span>Remember me</label>
                                     </div>
                                     <div className="form-group form-button">
-                                        <input type="submit" name="signin" id="signin" className="form-submit" value="Log in"/>
+                                        <Link type="submit" name="signin" id="signin" className="form-submit" to="/createpost">Log in</Link>
                                     </div>
                                 </form>
                                 <div className="social-login">

@@ -16,6 +16,16 @@ conn.on('error', function(err){
     console.log('mongoose connection error:', err.message);
 });
 
+// configure our app to handle CORS requests
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Headers', 'x-access-token,X-Requested-With,Content-Type,Authorization');
+    res.setHeader('X-Powered-By', 'Lucky Lucciano');
+    next();
+});
+
 app.use("/api", api);
 app.use(express.static(path.join(__dirname, 'build')));
 
@@ -24,4 +34,4 @@ app.get('*', function(req, res) {
     //res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Blog listening on port ${port}!`))

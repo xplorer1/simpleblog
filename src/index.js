@@ -7,6 +7,7 @@ import ContactMe from "./components/contactme";
 import Login from "./components/login";
 import SignUp from "./components/signup";
 import Post from "./components/post";
+import Posts from "./components/posts";
 import CreatePost from "./components/createpost";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
 				<Route path="/login" component = {Login} />
 				<Route path="/signup" component = {SignUp} />
 				<Route path="/post" component = {Post} />
+				<Route path="/posts" component = {Posts} />
 				<Route path="/createpost" component = {CreatePost} />
 			</Switch>
         </Router>

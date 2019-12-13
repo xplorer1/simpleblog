@@ -13,11 +13,21 @@ apirouter.use(function(req, res, next) {
     next(); 
 });
 
-apirouter.get('/api', GeneralController.index);
-apirouter.post('/api/signup', GeneralController.signup);
-apirouter.post('/api/login', GeneralController.login);
-apirouter.get('/api/posts', GeneralController.getposts);
-apirouter.get('/api/post/:postid', GeneralController.getpost);
-apirouter.post('/api/savepost', GeneralController.savepost);
+apirouter.get('/api/:d', Index);
+apirouter.post('/signup', Signup);
+//apirouter.post('/login', Login);
+//apirouter.get('/posts', Getposts);
+//apirouter.get('/post/:postid', Getpost);
+//apirouter.post('/savepost', Savepost);
+
+function Index (req, res) {
+	console.log("got to Index.");
+	res.send("Yay. got here")
+}
+
+function Signup(req, res) {
+	console.log("Got to Signup. ", req.data);
+	res.json({status: true, data: "recieved."})
+}
 
 module.exports = apirouter;

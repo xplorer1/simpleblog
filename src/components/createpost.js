@@ -57,7 +57,7 @@ class CreatePost extends React.Component {
                                 </div>
                                 
                                 <div className="form-group">
-                                    <Link type="submit" className="btn btn-primary" to="/post">
+                                    <Link type="submit" className="btn btn-primary" to="/posts">
                                         Create
                                     </Link>
                                     <button className="btn btn-default">
