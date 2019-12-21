@@ -4,6 +4,7 @@ const port = 8050;
 const api = require("./app/routes/api");
 const path = require('path');
 const bodyParser = require('body-parser');
+const cors = require('cors')
 
 let mongoose = require('mongoose'); // for working w/ our database
 let config = require('./config');
@@ -19,11 +20,13 @@ conn.on('error', function(err){
 
 //app.use(bodyParser.urlencoded({ extended: true }));
 
-/*app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
-app.use(bodyParser.json({limit: '5mb'}));
-app.use(bodyParser.raw({limit: '5mb'}) );*/
+app.use(cors());
 
-app.use(express.json())
+app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.raw({limit: '5mb'}) );
+
+//app.use(express.json())
 
 // configure our app to handle CORS requests
 app.use(function(req, res, next) {
@@ -36,10 +39,10 @@ app.use(function(req, res, next) {
 });
 
 app.use("/api", api);
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('*', function(req, res) { 
-	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+	res.sendFile(path.join(__dirname, 'public', 'index.html'));
     //res.sendFile(path.join(__dirname + '/build/index.html'));
 });
 

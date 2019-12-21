@@ -46,7 +46,7 @@ class SignUp extends React.Component {
 
                 fetch(Utility.baseurl + "signup", {
                         method: 'POST', 
-                        data: JSON.stringify(data),
+                        body: JSON.stringify(data),
                         headers: {
                           'Accept': 'application/json',
                           'Content-Type': 'application/json',
@@ -57,11 +57,12 @@ class SignUp extends React.Component {
                         return response.json();
                     })
                     .then((data) => {
-                        this.setState({ajaxloading: false});                        
+                        this.setState({ajaxloading: false});   
+                        console.log("response: ", data);                     
                     })
                     .catch((error) => {
                         this.setState({ajaxloading: false});
-                        console.log("erro: ", error.message);
+                        console.log("erro: ", error);
                     }) 
                 })
             }
