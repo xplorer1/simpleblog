@@ -26,8 +26,8 @@ function Index (req, res) {
 }
 
 function Signup(req, res) {
-	console.log("Got to Signup. ", req.data);
-	res.json({status: true, data: "recieved."})
+	console.log("Got to Signup. ", req.body);
+	return res.json({status: true, data: "recieved." + req.body})
 }
 
 module.exports = apirouter;

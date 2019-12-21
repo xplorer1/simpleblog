@@ -37,27 +37,16 @@ class SignUp extends React.Component {
         }
         else {
 
-            console.log("got here.")
+            console.log("got here. ", Utility.baseurl)
 
             let data = {
                 email: this.state.email,
                 password: this.state.password
             }
 
-            axios.post(Utility.baseurl + "signup", {
-                email: this.state.email,
-                password: this.state.password
-                })
-                .then((response) => {
-
-                    console.log(response);
-                }, (error) => {
-                    console.log(error);
-            });
-
             this.setState({ ajaxloading: true }, () => {
 
-                fetch(Utility.baseurl+"signup", {
+                fetch(Utility.baseurl + "signup", {
                         method: 'POST', 
                         data: JSON.stringify(data),
                         headers: {
