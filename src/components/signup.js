@@ -37,8 +37,6 @@ class SignUp extends React.Component {
         }
         else {
 
-            console.log("got here. ", Utility.baseurl)
-
             let data = {
                 email: this.state.email,
                 password: this.state.password
