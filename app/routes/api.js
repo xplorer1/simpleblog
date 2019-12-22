@@ -23,8 +23,6 @@ function Signup(req, res) {
 			//return res.json({status: false, data: err.message})
 		}
 
-		console.log("existinguser: ", existinguser)
-
 		if(!existinguser) {
 			let user = new User();
 

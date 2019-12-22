@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {Loader, Utility} from "./home";
 import axios from "axios";
 import alertify from "alertifyjs";
@@ -13,7 +13,8 @@ class SignUp extends React.Component {
             password: "",
             re_password: "",
             showLoader: true,
-            ajaxloading: false
+            ajaxloading: false,
+            tocreatepost: false,
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -57,9 +58,34 @@ class SignUp extends React.Component {
                         this.setState({ajaxloading: false});
                         return response.json();
                     })
-                    .then((data) => {
-                        this.setState({ajaxloading: false});   
-                        console.log("response: ", data);                     
+                    .then((response) => {
+                        this.setState({ajaxloading: false}); 
+
+                        switch (response.data) {
+                            case "email-required":
+                                alertify.warning("Please enter your email address.")
+                            break;
+
+                            case "password-required":
+                                alertify.warning("Please enter your password.")
+                            break;
+                            case "signup_successful": 
+                                this.setState(() => ({
+                                    tocreatepost: true
+                                }))
+
+                                alertify.notify('Sign up was successfull.', 'success', 5, 
+                                    function () {
+                                        if (this.state.tocreatepost === true) {
+                                            return <Redirect to='/createpost' />
+                                        }
+                                    }
+                                );
+                            break;
+                            case "user-exists":
+                                alertify.warning("Oops! Looks like your email address is already registered. Please check it or login if you already registered.")
+                            break;
+                        }                          
                     })
                     .catch((error) => {
                         this.setState({ajaxloading: false});
