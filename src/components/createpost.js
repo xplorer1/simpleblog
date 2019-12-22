@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link, withRouter} from "react-router-dom";
 import {Loader, Utility} from "./home";
+import axios from "axios";
 
 class CreatePost extends React.Component {
 	constructor() {
@@ -17,6 +18,7 @@ class CreatePost extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInput = this.handleInput.bind(this);
         this.handleInputClear = this.handleInputClear.bind(this);
+        this.handleFileUpload = this.handleFileUpload.bind(this);
 	}
 
     handleSubmit(e) {
@@ -99,6 +101,32 @@ class CreatePost extends React.Component {
         });
     };
 
+    handleFileUpload(e) {
+
+        this.setState({
+            postmedia: e.target.files[0]
+        });
+
+        let file = e.target.files[0];
+        let reader = new FileReader();
+
+        reader.readAsDataURL (file);
+
+        reader.onloadend = function() {
+            console.log("return: ", reader);
+            //callback(reader.result);
+        }
+
+        console.log("posting...");
+
+        /*const postphoto = new FormData()
+        postphoto.append('postmedia', this.state.postmedia);
+
+        axios.post(Utility.baseurl+ "savepost", this.state.postmedia, {}).then(res => {
+            console.log("response: ", res);
+        })*/
+    }
+
     handleInputClear() {
         this.setState({
             posttitle: "",
@@ -150,7 +178,7 @@ class CreatePost extends React.Component {
 
                                 <div className="form-group">
                                     <label htmlFor="exampleFormControlFile1">Upload media</label>
-                                    <input type="file" className="form-control-file" id="exampleFormControlFile1" mame="postmedia" onChange={this.handleInput} value={this.state.postmedia}/>
+                                    <input type="file" className="form-control-file" name="postmedia" onChange={this.handleFileUpload}/>
                                 </div>
                                 
                                 <div className="form-group">
@@ -158,10 +186,11 @@ class CreatePost extends React.Component {
                                     <textarea rows="5" className="form-control" name="description" name="postbody" onChange={this.handleInput} value={this.state.postbody}></textarea>
                                 </div>
                                 
-                                <div className="form-group">
+                                <div className="form-group d-flex">
                                     <button type="submit" className="btn btn-primary"  onClick={this.handleSubmit}>
                                         Create
                                     </button>
+                                    {this.state.ajaxloading ? Utility.ajaxloader() : <div></div>}
 
                                     <button className="btn btn-default" onClick={this.handleInputClear}>
                                         Cancel
