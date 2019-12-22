@@ -221,7 +221,7 @@ class SignUp extends React.Component {
 
         setTimeout(function() {
             this.setState({showLoader: false})
-            alertify.success('Ready!');
+            alertify.set('notifier','position', 'top-right');
             //this.state.showLoader=false;
         }.bind(this), 1000, this.state.showLoader);
     }

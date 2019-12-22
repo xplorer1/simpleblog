@@ -11,6 +11,7 @@ apirouter.use(function(req, res, next) {
 });
 
 apirouter.post('/signup', Signup);
+apirouter.post('/savepost', SavePost);
 
 function Signup(req, res) {
 	console.log("req.body: ", req.body)
@@ -46,6 +47,10 @@ function Signup(req, res) {
 			return res.json({status: false, data: "user-exists"});
 		}
 	})
+}
+
+function SavePost(req, res) {
+	console.log("at the SavePost.");
 }
 
 module.exports = apirouter;
