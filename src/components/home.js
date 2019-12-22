@@ -68,22 +68,6 @@ class StatikComponent extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {showLoader: true};
-
-		this.handleBlur = this.handleBlur.bind(this);
-		this.handleFocus = this.handleFocus.bind(this);
-		this.handleInput = this.handleInput.bind(this);
-	}
-
-	handleBlur() {
-		console.log("Yo man! I handle blur in this clutter of a site.")
-	}
-
-	handleFocus() {
-		console.log("Yo man! I handle focus in this clutter of a site.")
-	}
-
-	handleInput() {
-		console.log("Yo nigga! I handle all input in this clutter of a site.")
 	}
 
 	render() {
@@ -110,7 +94,7 @@ class StatikComponent extends React.Component {
 									<Link className="nav-link" to="/signup">Sign Up</Link>
 								</li>
 
-								<li className="nav-item">
+								<li className="nav-item" data-toggle="modal" data-target="#myModal">
 									<a className="nav-link" data-toggle="modal" data-target="#myModal">Post to my blog?</a>
 								</li>
 							</ul>
@@ -209,6 +193,34 @@ class StatikComponent extends React.Component {
 
   				<hr />
 
+  				<div id="myModal" className="modal fade">
+					<div className="modal-dialog">
+
+						<div className="modal-content">
+							<div className="modal-header">
+								<h5 className="modal-title" id="exampleModalLongTitle">Enter your password.</h5>
+								<button type="button" className="close" data-dismiss="modal" aria-label="Close">
+						          <span aria-hidden="true">&times;</span>
+						        </button>
+							</div>
+
+							<div className="modal-body">
+								<div className="">Are you registered? <br />Enter your password to write and publish.</div>
+
+								<div className="form-group">
+                                    <label htmlFor="your_pass"></label>
+                                    <input type="password" name="your_pass" id="your_pass" placeholder="Password" className="cust-btn" />
+                                </div>
+							</div>
+
+							<div className="modal-footer">
+								<Link type="button" className="btn btn-primary" to="/createpost">Login</Link>
+								<button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<footer>
 					<div className="container">
 						<div className="row">
@@ -244,34 +256,6 @@ class StatikComponent extends React.Component {
 						</div>
 					</div>
 				</footer>
-
-				<div id="myModal" className="modal fade" role="dialog">
-					<div className="modal-dialog">
-
-						<div className="modal-content">
-							<div className="modal-header">
-								<h5 className="modal-title" id="exampleModalLongTitle">Enter your password.</h5>
-								<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-						          <span aria-hidden="true">&times;</span>
-						        </button>
-							</div>
-
-							<div className="modal-body">
-								<div className="">Are you registered? <br />Enter your password to write and publish.</div>
-
-								<div className="form-group">
-                                    <label htmlFor="your_pass"></label>
-                                    <input type="password" name="your_pass" id="your_pass" placeholder="Password" className="cust-btn" />
-                                </div>
-							</div>
-
-							<div className="modal-footer">
-								<Link type="button" className="btn btn-primary" to="/createpost">Login</Link>
-								<button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-							</div>
-						</div>
-					</div>
-				</div>
 
 			</article>
 		)

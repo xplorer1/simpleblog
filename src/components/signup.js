@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {Loader, Utility} from "./home";
 import axios from "axios";
+import alertify from "alertifyjs";
 
 class SignUp extends React.Component {
 	constructor() {
@@ -121,7 +122,7 @@ class SignUp extends React.Component {
                                             <input type="password" name="password" id="pass" placeholder="Password" onChange={this.handleInput} value={this.state.password}/>
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="re-pass"><i className="zmdi zmdi-lock-outline"></i></label>
+                                            <label htmlFor="re-pass"><i className="zmdi zmdi-lock"></i></label>
                                             <input type="password" name="re_password" id="re_pass" placeholder="Repeat your password"onChange={this.handleInput} value={this.state.re_password}/>
                                         </div>
                                         <div className="form-group">
@@ -189,6 +190,7 @@ class SignUp extends React.Component {
 
         setTimeout(function() {
             this.setState({showLoader: false})
+            alertify.success('Ready!');
             //this.state.showLoader=false;
         }.bind(this), 1000, this.state.showLoader);
     }
