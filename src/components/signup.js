@@ -69,20 +69,25 @@ class SignUp extends React.Component {
                             case "password-required":
                                 alertify.warning("Please enter your password.")
                             break;
+
                             case "signup_successful": 
                                 this.setState(() => ({
                                     tocreatepost: true
                                 }))
 
                                 alertify.notify('Sign up was successfull.', 'success', 5, 
-                                    function () {
+                                    function () {     
+
                                         if (this.state.tocreatepost === true) {
-                                            return <Redirect to='/createpost' />
+                                            console.log("statedata: ", this.state);
+                                            this.props.history.push('/createpost')
                                         }
-                                    }
+                                    }.bind(this)
                                 );
+
                             break;
                             case "user-exists":
+                                console.log("tu: ", this.state);
                                 alertify.warning("Oops! Looks like your email address is already registered. Please check it or login if you already registered.")
                             break;
                         }                          
