@@ -103,28 +103,16 @@ class CreatePost extends React.Component {
 
     handleFileUpload(e) {
 
-        this.setState({
-            postmedia: e.target.files[0]
-        });
-
         let file = e.target.files[0];
         let reader = new FileReader();
 
         reader.readAsDataURL (file);
 
         reader.onloadend = function() {
-            console.log("return: ", reader);
-            //callback(reader.result);
-        }
-
-        console.log("posting...");
-
-        /*const postphoto = new FormData()
-        postphoto.append('postmedia', this.state.postmedia);
-
-        axios.post(Utility.baseurl+ "savepost", this.state.postmedia, {}).then(res => {
-            console.log("response: ", res);
-        })*/
+            this.setState({
+                postmedia: reader.result
+            });
+        }.bind(this);
     }
 
     handleInputClear() {

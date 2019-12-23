@@ -50,7 +50,7 @@ function Signup(req, res) {
 }
 
 function SavePost(req, res) {
-	console.log("at the SavePost.", req);
+	console.log("at the SavePost.", req.body);
 	//if(req.body)
 	return res.json({status: true, data: "received"})
 }
