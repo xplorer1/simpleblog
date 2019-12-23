@@ -1,7 +1,7 @@
 let nodemailer = require('nodemailer');
 
 module.exports = {
-    sendEmailVerificationMail: function sendEmailVerificationMail(confirmlink, recipient){
+    sendEmailVerificationMail: function sendEmailVerificationMail(confirmlink, recipient) {
 
         let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
@@ -15,7 +15,7 @@ module.exports = {
         let mailOptions = {
             from: '"Hello From Chijioke"s Personal Blog <cranky.uncle3@gmail.com>', // sender address
             to: recipient, //'bar@blurdybloop.com, baz@blurdybloop.com' // list of receivers
-            subject: 'Thank you for signing up ✔', // Subject line
+            subject: 'Thank you for signing up ✔ Confirm your email address for added security!', // Subject line
             text: 'You have a message! Thank you for choosing us. We are pleased to have you on board. To activate your account and verify your email, click or copy the link below to your browser.' + confirmlink + ' All future notifications will be sent to this email address.', // plaintext body
             html: 'You have a message!<br><br>Thank you for choosing us. We are pleased to have you on board. <br><br>To activate your account and verify your email, click or copy the link below to your browser.<br><br><strong>' + confirmlink + '</strong><br><br><br> <a  target="_blank" href="' + confirmlink + '" style="text-decoration: none; padding: 2% 4%; border: 1px solid #4d5862; color: #fff !important; cursor: pointer; background: #4d5862; width: 100%;">Confirm Email</a> <br><br><br>All future notifications will be sent to this email address.<br><br>Best regards!<br><br> ' // html body
         };

@@ -4,10 +4,23 @@ let bcrypt = require('bcrypt-nodejs');
 
 let PostSchema = new Schema({
     'post' : {
-        'owner': { type: String },
+        'owner': { 
+            type: String, 
+            required: true, 
+            trim: true,
+            lowercase: true,
+            validate: {
+                validator: function(v) {
+                    return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v);
+                },
+                message: '{VALUE} is not a valid email!'
+            }
+        },
         'postid' : { type: String },
+        'posttitle' : { type: String },
+        'postbody' : { type: String },
         'postedon' : { type: Date, default: new Date() },
-        'photo' : {type: String},
+        'postmedia' : {type: String},
         'comments' : [
             'owner': { type: String },
             'comment': { type: String },
@@ -15,14 +28,6 @@ let PostSchema = new Schema({
         ]
 
     },
-    'owner' : String,
-    'createdon' : Date,
-
-    'verified': { type: Boolean },
-    'verifiedon': { type: Date, default: new Date() },
-    'vcode': { type: String },
-    'resetpasswordtoken': {type: String},
-    'resetpasswordexpires': {type: Date},
 });
 
 module.exports = mongoose.model('Post', PostSchema);

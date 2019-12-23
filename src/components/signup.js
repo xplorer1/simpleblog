@@ -70,7 +70,7 @@ class SignUp extends React.Component {
                                 alertify.warning("Please enter your password.")
                             break;
 
-                            case "signup_successful": 
+                            case "signup-successful": 
                                 this.setState(() => ({
                                     tocreatepost: true
                                 }))
