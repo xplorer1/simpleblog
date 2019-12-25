@@ -191,7 +191,7 @@ class StatikComponent extends React.Component {
 							</div>
 
 							<div className="modal-footer">
-								<Link type="button" className="btn btn-primary" to="/createpost">Login</Link>
+								<button type="button" className="btn btn-primary">Login</button>
 								<button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
 							</div>
 						</div>

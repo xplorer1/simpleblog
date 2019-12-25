@@ -1,13 +1,101 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {Loader} from "./home";
+import {Loader, Utility} from "./home";
+import alertify from "alertifyjs";
 
 class Login extends React.Component {
 	constructor() {
-		super();
+        super();
 
-        this.state = {showLoader: true};
-	}
+        this.state = {
+            email: "",
+            password: "",
+            showLoader: true,
+            ajaxloading: false,
+        }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleInput = this.handleInput.bind(this);
+    }
+
+    handleSubmit(e) {
+
+        e.preventDefault();
+
+        if(!this.state.email) {
+            alert("Please enter email.");
+        }
+        else if (!this.state.password) {
+            alert("Please enter password.");
+        }
+        else {
+
+            let data = {
+                email: this.state.email,
+                password: this.state.password
+            }
+
+            this.setState({ ajaxloading: true }, () => {
+
+                fetch(Utility.baseurl + "login", {
+                        method: 'POST', 
+                        body: JSON.stringify(data),
+                        headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json',
+                        },
+                    })
+                    .then((response) => {
+                        this.setState({ajaxloading: false});
+                        return response.json();
+                    })
+                    .then((response) => {
+                        this.setState({ajaxloading: false}); 
+
+                        switch (response.data) {
+                            case "email-required":
+                                alertify.warning("Please enter your email address.")
+                            break;
+
+                            case "password-required":
+                                alertify.warning("Please enter your password.")
+                            break;
+
+                            case "signup-successful": 
+                                this.setState(() => ({
+                                    tocreatepost: true
+                                }))
+
+                                alertify.notify('Sign up was successfull.', 'success', 5, 
+                                    function () {     
+
+                                        if (this.state.tocreatepost === true) {
+                                            console.log("statedata: ", this.state);
+                                            this.props.history.push('/createpost')
+                                        }
+                                    }.bind(this)
+                                );
+
+                            break;
+                            case "user-exists":
+                                console.log("tu: ", this.state);
+                                alertify.warning("Oops! Looks like your email address is already registered. Please check it or login if you already registered.")
+                            break;
+                        }                          
+                    })
+                    .catch((error) => {
+                        this.setState({ajaxloading: false});
+                        console.log("erro: ", error);
+                    }) 
+                })
+            }
+    };
+
+    handleInput(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        });
+    };
 
 	render() {
 		return (
@@ -44,27 +132,28 @@ class Login extends React.Component {
                         <div className="signin-content">
                             <div className="signin-image">
                                 <figure><img src="assets/img/signin-image.jpg" alt="sing up image" /></figure>
-                                <Link to="/signup" className="signup-image-link">Create an account</Link>
                             </div>
 
                             <div className="signin-form">
                                 <h2 className="form-title">Sign in</h2>
                                 <form className="register-form" id="login-form">
                                     <div className="form-group">
-                                        <label htmlFor="your_name"><i className="zmdi zmdi-account material-icons-name"></i></label>
-                                        <input type="text" name="your_name" id="your_name" placeholder="Your Name"/>
+                                        <label htmlFor="email"><i className="zmdi zmdi-email material-icons-email"></i></label>
+                                        <input type="text" name="email" id="email" placeholder="Your email address"  onChange={this.handleInput} value={this.state.email}/>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="your_pass"><i className="zmdi zmdi-lock"></i></label>
-                                        <input type="password" name="your_pass" id="your_pass" placeholder="Password"/>
+                                        <input type="password" name="password" id="your_pass" placeholder="Password" onChange={this.handleInput} value={this.state.password}/>
                                     </div>
                                     <div className="form-group">
                                         <input type="checkbox" name="remember-me" id="remember-me" className="agree-term" />
                                         <label htmlFor="remember-me" className="label-agree-term"><span><span></span></span>Remember me</label>
                                     </div>
                                     <div className="form-group form-button">
-                                        <Link type="submit" name="signin" id="signin" className="form-submit" to="/createpost">Log in</Link>
+                                        <button type="submit" name="signin" id="signin" className="border-0 form-submit" onClick={this.handleSubmit}>Log in</button>
                                     </div>
+
+                                    <Link to="/signup" className="text-justify signup-image-link">Create an account</Link>
                                 </form>
                                 <div className="social-login">
                                     <span className="social-label">Or login with</span>
@@ -86,12 +175,9 @@ class Login extends React.Component {
     componentDidMount() {
 
         setTimeout(function() {
-            console.log("state: ", this.state)
             this.setState({showLoader: false})
             //this.state.showLoader=false;
-        }.bind(this), 2000, this.state.showLoader);
-
-        console.log("after state: ", this.state)
+        }.bind(this), 1000, this.state.showLoader);
     }
 }
 

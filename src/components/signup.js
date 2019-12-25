@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link, Redirect} from "react-router-dom";
 import {Loader, Utility} from "./home";
-import axios from "axios";
 import alertify from "alertifyjs";
 
 class SignUp extends React.Component {
@@ -10,7 +9,9 @@ class SignUp extends React.Component {
 
         this.state = {
             email: "",
+            name: "",
             password: "",
+            agreeterm: "",
             re_password: "",
             showLoader: true,
             ajaxloading: false,
@@ -21,12 +22,15 @@ class SignUp extends React.Component {
         this.handleInput = this.handleInput.bind(this);
 	}
 
-    handleSubmit(e) {
+    handleSubmit = (e) => {
 
         e.preventDefault();
 
         if(!this.state.email) {
             alert("Please enter email.");
+        }
+        else if(!this.state.name) {
+            alert("Please enter your name.");
         }
         else if (!this.state.password) {
             alert("Please enter password.");
@@ -36,6 +40,9 @@ class SignUp extends React.Component {
         }
         else if(this.state.password.toString() !== this.state.re_password.toString()) {
             alert("Passwords don't match.");
+        }
+        else if (!this.state.agreeterm) {
+            alertify.error("You have to agree to our terms before you can proceed.")
         }
         else {
 
@@ -66,6 +73,10 @@ class SignUp extends React.Component {
                                 alertify.warning("Please enter your email address.")
                             break;
 
+                            case "name-required":
+                                alertify.warning("Please enter your name.")
+                            break;
+
                             case "password-required":
                                 alertify.warning("Please enter your password.")
                             break;
@@ -87,7 +98,6 @@ class SignUp extends React.Component {
 
                             break;
                             case "user-exists":
-                                console.log("tu: ", this.state);
                                 alertify.warning("Oops! Looks like your email address is already registered. Please check it or login if you already registered.")
                             break;
                         }                          
@@ -98,9 +108,17 @@ class SignUp extends React.Component {
                     }) 
                 })
             }
-    };
+    }
 
-    handleInput(e) {
+    handleCheck = (e) => {
+
+        this.setState({
+            [e.target.name]: e.target.checked
+        });
+    }
+
+    handleInput = (e) => {
+
         this.setState({
             [e.target.name]: e.target.value
         });
@@ -149,6 +167,10 @@ class SignUp extends React.Component {
                                             <input type="email" name="email" id="email" placeholder="Your Email" onChange={this.handleInput} value={this.state.email}/>
                                         </div>
                                         <div className="form-group">
+                                            <label htmlFor="email"><i className="zmdi zmdi-name"></i></label>
+                                            <input type="text" name="name" id="name" placeholder="Your name" onChange={this.handleInput} value={this.state.name}/>
+                                        </div>
+                                        <div className="form-group">
                                             <label htmlFor="pass"><i className="zmdi zmdi-lock"></i></label>
                                             <input type="password" name="password" id="pass" placeholder="Password" onChange={this.handleInput} value={this.state.password}/>
                                         </div>
@@ -157,20 +179,21 @@ class SignUp extends React.Component {
                                             <input type="password" name="re_password" id="re_pass" placeholder="Repeat your password"onChange={this.handleInput} value={this.state.re_password}/>
                                         </div>
                                         <div className="form-group">
-                                            <input type="checkbox" name="agree-term" id="agree-term" className="agree-term" />
-                                            <label htmlFor="agree-term" className="label-agree-term"><span><span></span></span>I agree to the 
+                                            <input type="checkbox" name="agreeterm" id="agreeterm" className="agreeterm" onChange={this.handleCheck} value={this.state.agreeterm}/>
+                                            <label htmlFor="agreeterm" className="label-agree-term"><span><span></span></span>I agree to the 
                                             <a className="term-service" data-toggle="modal" data-target="#exampleModalLong"> terms of service</a></label>
                                         </div>
                                         <div className="form-group form-button">
                                             <input type="submit" name="signup" id="signup" className="form-submit" onClick={this.handleSubmit} />
                                             {this.state.ajaxloading ? Utility.ajaxloader() : <div></div>}
                                         </div>
+
+                                        <Link to="/login" className="text-justify signup-image-link">I am already member</Link>
                                     </div>
                                 </div>
 
                                 <div className="signup-image">
                                     <figure><img src="assets/img/signup-image.jpg" alt="sign up image" /></figure>
-                                    <Link to="/login" className="signup-image-link">I am already member</Link>
                                 </div>
                             </div>
                         </div>

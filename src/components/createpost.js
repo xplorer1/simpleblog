@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, withRouter} from "react-router-dom";
 import {Loader, Utility} from "./home";
-import axios from "axios";
+import alertify from "alertifyjs";
 
 class CreatePost extends React.Component {
 	constructor() {
@@ -54,38 +54,48 @@ class CreatePost extends React.Component {
                         return response.json();
                     })
                     .then((response) => {
-                        this.setState({ajaxloading: false}); 
+                        this.setState({ajaxloading: false});
+                        console.log("Response: ", response)
 
-                        /*switch (response.data) {
-                            case "email-required":
-                                alertify.warning("Please enter your email address.")
+                        switch (response.data) {
+                            case "token-required" || "token-expired" :
+                                alertify.notify("Ooop! Such error. Please let us know if this is still you.", "warning", 2, 
+                                    function() {
+                                        console.log("check")
+                                        this.props.history.push('/login');
+                                    }.bind(this)
+                                )
                             break;
 
-                            case "password-required":
-                                alertify.warning("Please enter your password.")
+                            case "posttitle-required":
+                                alertify.warning("Ouch! Looks like you didn't supply a post title.")
                             break;
 
-                            case "signup_successful": 
-                                this.setState(() => ({
-                                    tocreatepost: true
-                                }))
+                            case "postbody-required":
+                                alertify.warning("Ooops! Looks like the body of your post is empty...")
+                            break;
 
-                                alertify.notify('Sign up was successfull.', 'success', 5, 
+                            case "user-notfound":
+                                alertify.notify("Wow! We are having trouble identifying you. Please sign in or write to us.", 
+                                    "warning", 2, function () {
+                                        this.props.history.push('/login');
+                                    }.bind(this)
+                                )
+                            break;
+
+                            case "post-saved": 
+                                alertify.notify('Cheers! Post has been successfully saved.', 'success', 5, 
                                     function () {     
-
-                                        if (this.state.tocreatepost === true) {
-                                            console.log("statedata: ", this.state);
-                                            this.props.history.push('/createpost')
-                                        }
+                                        console.log("statedata: ", this.state);
+                                        this.props.history.push('/createpost')
                                     }.bind(this)
                                 );
 
                             break;
-                            case "user-exists":
-                                console.log("tu: ", this.state);
-                                alertify.warning("Oops! Looks like your email address is already registered. Please check it or login if you already registered.")
+                            case "unknown-error":
+                                alertify.warning("Oops! We are having some internal problems. Please try  again later.")
                             break;
-                        }  */                        
+                        }                         
                     })
                     .catch((error) => {
                         this.setState({ajaxloading: false});
@@ -180,7 +190,7 @@ class CreatePost extends React.Component {
                                     </button>
                                     {this.state.ajaxloading ? Utility.ajaxloader() : <div></div>}
 
-                                    <button className="btn btn-default" onClick={this.handleInputClear}>
+                                    <button className="ml-3 btn btn-default" onClick={this.handleInputClear}>
                                         Cancel
                                     </button>
                                 </div>

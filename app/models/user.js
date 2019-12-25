@@ -15,6 +15,7 @@ let UserSchema = new Schema({
         }
     },
     'password' : String,
+    'name' : String,
     'role' : String,
     'createdon' : { type: Date, default: new Date() },
     'verified': { type: Boolean, default: false },
