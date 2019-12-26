@@ -18,9 +18,10 @@ apirouter.post('/savepost', SavePost);
 apirouter.post('/login', Login);
 
 function Signup(req, res) {
+	console.log("req: ", req.body)
 	if(!req.body.email) return res.json({status: false, data: "email-required"});
 	if(!req.body.password) return res.json({status: false, data: "password-required"});
-	if(!req.body.name) return res.json({status: false, data: "name-required"});
+	if(!req.body.username) return res.json({status: false, data: "name-required"});
 
 	User.findOne({email: req.body.email}, (err, existinguser) => {
 		if(err) {
@@ -32,17 +33,25 @@ function Signup(req, res) {
 			let user = new User();
 
 			user.email = req.body.email;
-			user.name = req.body.name;
+			user.name = req.body.username;
 			user.password = req.body.password;
 			user.role = "guest";
 
-			user.vcode = config.generatePassword();
+			let vcode = config.generatePassword();
+
+			user.vcode = vcode;
 
 			let token = jwt.sign({
                 email: req.body.email,
             }, supersecret, {
-                expiresIn: 86400 //expires in 24 hours.
+                expiresIn: 86400 // expires in 24 hours.
             });
+
+            let owner = {};
+
+            owner.name = req.body.username;
+            owner.token = token;
+            owner.role = "guest";
 
 			user.save((err, success) => {
 				if(err) {
@@ -50,8 +59,8 @@ function Signup(req, res) {
 				}
 
 				if(success) {
-					mailer.sendEmailVerificationMail(config.BASE_URL+"/verify/"+vcode, req.body.email);
-	                return res.json({status: true, data: "signup-successful", token: token});
+					//mailer.sendEmailVerificationMail(config.BASE_URL+"/verify/"+vcode, req.body.email);
+	                return res.json({status: true, data: "signup-successful", user: owner});
 				}
 			})
 		} else if(existinguser) {
@@ -109,11 +118,14 @@ function Login(req, res) {
     User.findOne({email: req.body.email}, (err, user) => {
         if(err) return res.json({status: false, data: err.message});
 
-        let validpassword = user.comparePassword(req.body.password);
-
-        if(!user && !validpassword) {
+        if(!user) {
             return res.json({status: false, data: "user-notfound"});
         }
+
+        else if(!user.comparePassword(req.body.password)) {
+            return res.json({status: false, data: "user-notfound"});
+        }
+
         else {
         	let token = jwt.sign({
                 email: req.body.email,
@@ -121,9 +133,11 @@ function Login(req, res) {
                 expiresIn: 86400 // expires in 24 hours.
             });
 
+            console.log("user: ", user)
+
             let owner = {};
 
-            owner.name = user.name;
+            owner.username = user.username;
             owner.token = token;
             owner.role = "guest";
 

@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import {Loader, Utility} from "./home";
 import alertify from "alertifyjs";
+import store from "store";
 
 class Login extends React.Component {
 	constructor() {
@@ -51,6 +52,7 @@ class Login extends React.Component {
                     })
                     .then((response) => {
                         this.setState({ajaxloading: false}); 
+                        console.log("response: ", response);
 
                         switch (response.data) {
                             case "email-required":
@@ -61,25 +63,23 @@ class Login extends React.Component {
                                 alertify.warning("Please enter your password.")
                             break;
 
-                            case "signup-successful": 
-                                this.setState(() => ({
-                                    tocreatepost: true
-                                }))
+                            case "login-successful": 
+                                this.setState({
+                                    email: "",
+                                    password: ""
+                                })
 
-                                alertify.notify('Sign up was successfull.', 'success', 5, 
+                                store.set("userdata", response.user);
+
+                                alertify.notify('Login in was successfull.', 'success', 2, 
                                     function () {     
-
-                                        if (this.state.tocreatepost === true) {
-                                            console.log("statedata: ", this.state);
-                                            this.props.history.push('/createpost')
-                                        }
+                                        this.props.history.push('/createpost')
                                     }.bind(this)
                                 );
-
                             break;
-                            case "user-exists":
-                                console.log("tu: ", this.state);
-                                alertify.warning("Oops! Looks like your email address is already registered. Please check it or login if you already registered.")
+
+                            case "user-notfound":
+                                alertify.error("Oops! Looks like your email address or password is wrong. Please check it or register if you don't have an account.")
                             break;
                         }                          
                     })
@@ -151,6 +151,7 @@ class Login extends React.Component {
                                     </div>
                                     <div className="form-group form-button">
                                         <button type="submit" name="signin" id="signin" className="border-0 form-submit" onClick={this.handleSubmit}>Log in</button>
+                                        {this.state.ajaxloading ? Utility.ajaxloader() : <div></div>}
                                     </div>
 
                                     <Link to="/signup" className="text-justify signup-image-link">Create an account</Link>
@@ -176,7 +177,10 @@ class Login extends React.Component {
 
         setTimeout(function() {
             this.setState({showLoader: false})
-            //this.state.showLoader=false;
+            alertify.set('notifier','position', 'top-bottom');
+
+            store.remove("userdata");
+            
         }.bind(this), 1000, this.state.showLoader);
     }
 }

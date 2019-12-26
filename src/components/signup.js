@@ -2,6 +2,7 @@ import React from 'react';
 import {Link, Redirect} from "react-router-dom";
 import {Loader, Utility} from "./home";
 import alertify from "alertifyjs";
+import store from "store";
 
 class SignUp extends React.Component {
 	constructor() {
@@ -9,7 +10,7 @@ class SignUp extends React.Component {
 
         this.state = {
             email: "",
-            name: "",
+            username: "",
             password: "",
             agreeterm: "",
             re_password: "",
@@ -27,28 +28,35 @@ class SignUp extends React.Component {
         e.preventDefault();
 
         if(!this.state.email) {
-            alert("Please enter email.");
+            alertify.warning("How will we have that feel that is only you? Please enter your email address. We promise not to spam you.")
         }
-        else if(!this.state.name) {
-            alert("Please enter your name.");
+        else if(!Utility.validmail(this.state.email)) {
+            alertify.warning("Hmm. Not to cast slur on you, but it doesn't quite look your email address is correct. Please confirm.")
+        }
+        else if(!this.state.username) {
+            alertify.warning("Hi, we need a name to call you. Please enter your name.")
         }
         else if (!this.state.password) {
-            alert("Please enter password.");
+            alertify.warning("Sorry. A strong password is needed to secure your account.")
+        }
+        else if (this.state.password.length < 8) {
+            alertify.warning("Hmmm...That password is easy to guess. It needs to exceed 8 characters.")
         }
         else if(!this.state.re_password) {
-            alert("Please enter re_password.");
+            alertify.warning("You need to let us know you are sure what your password is. Please confirm your password.")
         }
         else if(this.state.password.toString() !== this.state.re_password.toString()) {
-            alert("Passwords don't match.");
+            alertify.warning("Wow! Such error. It appears your passwords don't match.")
         }
         else if (!this.state.agreeterm) {
-            alertify.error("You have to agree to our terms before you can proceed.")
+            alertify.warning("You have to agree to our terms before you can proceed.")
         }
         else {
 
             let data = {
                 email: this.state.email,
-                password: this.state.password
+                password: this.state.password,
+                username: this.state.username
             }
 
             this.setState({ ajaxloading: true }, () => {
@@ -82,29 +90,30 @@ class SignUp extends React.Component {
                             break;
 
                             case "signup-successful": 
-                                this.setState(() => ({
-                                    tocreatepost: true
-                                }))
 
-                                alertify.notify('Sign up was successfull.', 'success', 5, 
-                                    function () {     
+                                store.set("userdata", response.user);
 
-                                        if (this.state.tocreatepost === true) {
-                                            console.log("statedata: ", this.state);
-                                            this.props.history.push('/createpost')
-                                        }
+                                alertify.notify('Sign up was successfull.', 'success', 2, 
+                                    function () {
+                                        this.props.history.push('/createpost')
                                     }.bind(this)
                                 );
+
+                                return this.handleInputClear();
 
                             break;
                             case "user-exists":
                                 alertify.warning("Oops! Looks like your email address is already registered. Please check it or login if you already registered.")
+                                return this.handleInputClear();
                             break;
                         }                          
                     })
                     .catch((error) => {
                         this.setState({ajaxloading: false});
+
+                        alertify.warning("We are truly sorry, there has been an error. Please try again later.")
                         console.log("erro: ", error);
+                        return this.handleInputClear();
                     }) 
                 })
             }
@@ -122,7 +131,17 @@ class SignUp extends React.Component {
         this.setState({
             [e.target.name]: e.target.value
         });
-    };
+    }
+
+    handleInputClear = () => {
+        this.setState({
+            email: "",
+            username: "",
+            password: "",
+            agreeterm: false,
+            re_password: ""
+        })
+    }
 
 	render() {
 		return (
@@ -167,8 +186,8 @@ class SignUp extends React.Component {
                                             <input type="email" name="email" id="email" placeholder="Your Email" onChange={this.handleInput} value={this.state.email}/>
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="email"><i className="zmdi zmdi-name"></i></label>
-                                            <input type="text" name="name" id="name" placeholder="Your name" onChange={this.handleInput} value={this.state.name}/>
+                                            <label htmlFor="name"><i className="zmdi zmdi-person"></i></label>
+                                            <input type="text" name="username" id="username" placeholder="Your name" onChange={this.handleInput} value={this.state.username}/>
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="pass"><i className="zmdi zmdi-lock"></i></label>
@@ -244,8 +263,9 @@ class SignUp extends React.Component {
 
         setTimeout(function() {
             this.setState({showLoader: false})
-            alertify.set('notifier','position', 'top-right');
-            //this.state.showLoader=false;
+            alertify.set('notifier','position', 'top-bottom');
+            
+            store.remove("userdata");
         }.bind(this), 1000, this.state.showLoader);
     }
 }

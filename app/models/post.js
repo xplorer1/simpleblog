@@ -23,7 +23,7 @@ let PostSchema = new Schema({
     'comments' : {
         'commentowner' : { type: String },
         'comment': { type: String },
-        'commentedon' : { type: Date, default: new Date() }
+        'commentedon' : { type: Date }
     }
 });
 

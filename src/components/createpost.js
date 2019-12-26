@@ -2,10 +2,12 @@ import React from 'react';
 import {Link, withRouter} from "react-router-dom";
 import {Loader, Utility} from "./home";
 import alertify from "alertifyjs";
+import store from "store";
 
 class CreatePost extends React.Component {
 	constructor() {
 		super();
+
         this.state = {
             posttitle: "",
             postmedia: "",
@@ -13,6 +15,7 @@ class CreatePost extends React.Component {
             showLoader: true,
             ajaxloading: false,
             tocreatepost: false,
+            inputkey: ""
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,17 +29,20 @@ class CreatePost extends React.Component {
         e.preventDefault();
 
         if(!this.state.posttitle) {
-            alert("Please provide post title.");
+            alertify.warning("Your post needs a title. Please provide one.")
         }
         else if(!this.state.postbody) {
-            alert("Please provide the post.");
+            alertify.warning("What do you want to talk about in this post? Please provide it.")
         }
         else {
+            let userdata = store.get("userdata");
 
             let data = {
                 posttitle: this.state.posttitle,
                 postbody: this.state.postbody,
-                postmedia: this.state.postmedia
+                postmedia: this.state.postmedia,
+                token: userdata.token,
+                postowner: userdata.name
             }
 
             this.setState({ ajaxloading: true }, () => {
@@ -55,13 +61,12 @@ class CreatePost extends React.Component {
                     })
                     .then((response) => {
                         this.setState({ajaxloading: false});
-                        console.log("Response: ", response)
 
                         switch (response.data) {
                             case "token-required" || "token-expired" :
-                                alertify.notify("Ooop! Such error. Please let us know if this is still you.", "warning", 2, 
+
+                                alertify.notify("Ooop! Such error. Please let us know if this is still you.", "warning", 5, 
                                     function() {
-                                        console.log("check")
                                         this.props.history.push('/login');
                                     }.bind(this)
                                 )
@@ -84,10 +89,9 @@ class CreatePost extends React.Component {
                             break;
 
                             case "post-saved": 
-                                alertify.notify('Cheers! Post has been successfully saved.', 'success', 5, 
+                                alertify.notify('Post has been successfully saved.', 'success', 5, 
                                     function () {     
-                                        console.log("statedata: ", this.state);
-                                        this.props.history.push('/createpost')
+                                        this.handleInputClear();
                                     }.bind(this)
                                 );
 
@@ -125,11 +129,13 @@ class CreatePost extends React.Component {
         }.bind(this);
     }
 
-    handleInputClear() {
+    handleInputClear(e) {
+
         this.setState({
             posttitle: "",
             postmedia: "",
-            postbody: ""
+            postbody: "",
+            inputkey: Math.random().toString(10)
         });
     }
 
@@ -155,6 +161,10 @@ class CreatePost extends React.Component {
                                     <Link className="nav-link" to="/contactme" style={{color: "black"}}>Contact</Link>
                                 </li>
 
+                                <li className="nav-item">
+                                    <Link className="nav-link" to="/posts" style={{color: "black"}}>Posts</Link>
+                                </li>
+
                             </ul>
                         </div>
                     </div>
@@ -167,7 +177,7 @@ class CreatePost extends React.Component {
                             
                             <h2>Create post</h2>
                             
-                            <form action="" method="POST">
+                            <form method="POST">
                                 
                                 <div className="form-group">
                                     <label htmlFor="posttitle">Title <span className="require">*</span></label>
@@ -176,7 +186,7 @@ class CreatePost extends React.Component {
 
                                 <div className="form-group">
                                     <label htmlFor="exampleFormControlFile1">Upload media</label>
-                                    <input type="file" className="form-control-file" name="postmedia" onChange={this.handleFileUpload}/>
+                                    <input type="file" className="form-control-file" name="postmedia" key={this.state.inputkey || ""} onChange={this.handleFileUpload}/>
                                 </div>
                                 
                                 <div className="form-group">
@@ -203,6 +213,18 @@ class CreatePost extends React.Component {
 			</article>
 		)
 	}
+
+    componentWillMount() {
+        let user = store.get("userdata");
+
+        if(!user) {
+            alertify.notify("Oooops! Looks like session time has expired. Please sign in again.", "warning", 5, 
+                function() {
+                    this.props.history.push('/login');
+                }.bind(this)
+            )
+        }
+    }
 }
 
 export default withRouter(CreatePost);

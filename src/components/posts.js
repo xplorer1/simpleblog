@@ -1,14 +1,26 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {Utility} from "./home";
+import {Loader, Utility} from "./home";
+import alertify from "alertifyjs";
+import store from "store";
 let Nav = Utility.nav;
 
 class Posts extends React.Component {
+	constructor() {
+		super();
+
+		this.state = {
+			showLoader: true,
+            ajaxloading: false,
+		}
+	}
+	
 	render() {
 		return (
 			<section>
+				{this.state.showLoader === true && <Loader />}
 				<nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-					<div className="container">
+					<div className="container-fluid">
 						<a className="navbar-brand" href="index.html">My Blog</a>
 						<button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 							Menu
@@ -125,6 +137,16 @@ class Posts extends React.Component {
 			</section>
 		)
 	}
+
+	componentDidMount() {
+
+        setTimeout(function() {
+            this.setState({showLoader: false})
+            alertify.set('notifier','position', 'top-bottom');
+            
+            store.remove("userdata");
+        }.bind(this), 1000, this.state.showLoader);
+    }
 }
 
 export default Posts;
