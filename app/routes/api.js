@@ -7,6 +7,13 @@ const config = require('../../config');
 const mailer = require('../routes/mail');
 const jwt = require('jsonwebtoken');
 const supersecret = config.secret;
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({ 
+	cloud_name: 'dlzryf6va', 
+	api_key: '778956682317776', 
+	api_secret: 'CJAPi-911keO0z2sb3sKHw_7d8E' 
+});
 
 apirouter.use(function(req, res, next) {
     console.log(req.method, req.url);
@@ -16,6 +23,7 @@ apirouter.use(function(req, res, next) {
 apirouter.post('/signup', Signup);
 apirouter.post('/savepost', SavePost);
 apirouter.post('/login', Login);
+apirouter.get('/allposts', AllPosts);
 
 function Signup(req, res) {
 	console.log("req: ", req.body)
@@ -87,21 +95,31 @@ function SavePost(req, res) {
             		if(!user) return res.json({status: false, data: "user-notfound"});
 
             		if(user) {
-            			let post = new Post();
+            			let postid = config.generatePassword();
 
-            			post.owner = decoded.email;
-            			post.postid = config.generatePassword();
-            			post.posttitle = req.body.posttitle;
-            			post.postbody = req.body.postbody;
-            			post.postmedia = req.body.postmedia || "";
+            			cloudinary.v2.uploader.upload(req.body.postmedia, 
+            				{public_id: postid, overwrite: true}, (error, result) => {
+            					if(error) console.log("error: ", error.message);
 
-            			post.save((err, saved) => {
-            				if(err) console.log("err: ", err.message);
+            					if(result) {
+            						let post = new Post();
 
-            				if(saved) {
-            					return res.json({status: true, data: "post-saved"})
-            				}
-            			})
+			            			post.owner = decoded.email;
+			            			post.ownername = user.username;
+			            			post.postid = postid;
+			            			post.posttitle = req.body.posttitle;
+			            			post.postbody = req.body.postbody;
+			            			post.postmedia = result.secure_url || "";
+
+			            			post.save((err, saved) => {
+			            				if(err) console.log("err: ", err.message);
+
+			            				if(saved) {
+			            					return res.json({status: true, data: "post-saved"})
+			            				}
+			            			})
+            					}
+            				});
             		}
             	})
             } else {
@@ -145,6 +163,16 @@ function Login(req, res) {
         }
 
     })
+}
+
+function AllPosts(req, res) {
+
+	Post.find({}, {"__v" : 0, "_id" : 0}, (err, posts) => {
+		if(err) console.log("err: ", err.message);
+
+		if(posts) return res.json({status: true, data: posts});
+
+	})
 }
 
 module.exports = apirouter;

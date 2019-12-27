@@ -12,6 +12,7 @@ class Posts extends React.Component {
 		this.state = {
 			showLoader: true,
             ajaxloading: false,
+            postsdata: []
 		}
 	}
 	
@@ -47,21 +48,53 @@ class Posts extends React.Component {
 				</nav>
 
 				<header className="masthead" style={{backgroundImage: "url('img/about-bg.jpg')"}}>
-			    <div className="overlay"></div>
-			    <div className="container">
-			      <div className="row">
-			        <div className="col-lg-8 col-md-10 mx-auto">
-			          <div className="page-heading">
-			            <h1>All Posts</h1>
-			          </div>
-			        </div>
-			      </div>
-			    </div>
-			  </header>
+					<div className="overlay"></div>
+
+					<div className="container">
+						<div className="row">
+							<div className="col-lg-8 col-md-10 mx-auto">
+								<div className="page-heading">
+									<h1>All Posts</h1>
+								</div>
+							</div>
+						</div>
+					</div>
+				</header>
 
 				<div className="container">
 					<div className="row">
 						<div className="col-lg-8 col-md-10 mx-auto">
+
+							{
+								this.state.postsdata.map((post) => {
+
+									return (
+										<div className="row post-preview" key={post.postid} >
+
+											<div className="col-sm-4 pstmd">
+												<img src={post.postmedia} className="w-75" alt="Post image" />
+											</div>
+
+											<div className="col-sm-8">
+												<Link to={"/post/:"+post.postid}>
+													<h2 className="post-title">
+														{post.posttitle}
+													</h2>
+													<h3 className="post-subtitle">
+														{post.postbody.slice(0, 80)+ "..."}
+													</h3>
+												</Link>
+												<p className="post-meta">Posted by
+													<span href="#"> { post.owner } </span>
+													on  { new Date(post.postedon).toDateString() }
+												</p>
+											</div>
+											
+										</div>
+									)
+								})
+							}
+
 							<div className="post-preview">
 								<Link to="/post">
 									<h2 className="post-title">
@@ -140,12 +173,30 @@ class Posts extends React.Component {
 
 	componentDidMount() {
 
-        setTimeout(function() {
+		fetch(Utility.baseurl + "allposts/", {
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			}
+		})
+        .then((response) => {
+            return response.json();
             this.setState({showLoader: false})
-            alertify.set('notifier','position', 'top-bottom');
-            
-            store.remove("userdata");
-        }.bind(this), 1000, this.state.showLoader);
+        })
+        .then((response) => {
+
+            store.set("posts", response.data);
+            this.setState({postsdata: response.data});
+
+            this.setState({showLoader: false})
+        })
+        .catch((error) => {
+        	this.setState({showLoader: false})
+
+            console.log("error: ", error);
+        })
+
+       alertify.set('notifier','position', 'top-bottom');
     }
 }
 
