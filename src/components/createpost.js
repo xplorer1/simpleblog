@@ -102,6 +102,7 @@ class CreatePost extends React.Component {
                         }                         
                     })
                     .catch((error) => {
+                        alertify.warning("Oops! We are having some internal problems. Please try  again later.")
                         this.setState({ajaxloading: false});
                         console.log("erro: ", error);
                     }) 

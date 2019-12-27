@@ -9,6 +9,8 @@ const jwt = require('jsonwebtoken');
 const supersecret = config.secret;
 const cloudinary = require('cloudinary').v2;
 
+let postholder = "https://www.solidbackgrounds.com/images/2560x1440/2560x1440-davys-grey-solid-color-background.jpg";
+
 cloudinary.config({ 
 	cloud_name: 'dlzryf6va', 
 	api_key: '778956682317776', 
@@ -97,7 +99,8 @@ function SavePost(req, res) {
             		if(user) {
             			let postid = config.generatePassword();
 
-            			cloudinary.v2.uploader.upload(req.body.postmedia, 
+            			if(req.body.postmedia) {
+            				cloudinary.uploader.upload(req.body.postmedia, 
             				{public_id: postid, overwrite: true}, (error, result) => {
             					if(error) console.log("error: ", error.message);
 
@@ -120,6 +123,24 @@ function SavePost(req, res) {
 			            			})
             					}
             				});
+            			} else {
+            				let post = new Post();
+
+	            			post.owner = decoded.email;
+	            			post.ownername = user.username;
+	            			post.postid = postid;
+	            			post.posttitle = req.body.posttitle;
+	            			post.postbody = req.body.postbody;
+	            			post.postmedia = postholder;
+
+	            			post.save((err, saved) => {
+	            				if(err) console.log("err: ", err.message);
+
+	            				if(saved) {
+	            					return res.json({status: true, data: "post-saved"})
+	            				}
+	            			})
+            			}
             		}
             	})
             } else {
@@ -150,8 +171,6 @@ function Login(req, res) {
             }, supersecret, {
                 expiresIn: 86400 // expires in 24 hours.
             });
-
-            console.log("user: ", user)
 
             let owner = {};
 

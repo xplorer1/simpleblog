@@ -63,7 +63,7 @@ class Posts extends React.Component {
 
 				<div className="container">
 					<div className="row">
-						<div className="col-lg-8 col-md-10 mx-auto">
+						<div className="mx-auto">
 
 							{
 								this.state.postsdata.map((post) => {
@@ -71,7 +71,7 @@ class Posts extends React.Component {
 									return (
 										<div className="row post-preview" key={post.postid} >
 
-											<div className="col-sm-4 pstmd">
+											<div className="col-sm-4 pstmd mb-3">
 												<img src={post.postmedia} className="w-75" alt="Post image" />
 											</div>
 
@@ -88,6 +88,7 @@ class Posts extends React.Component {
 													<span href="#"> { post.owner } </span>
 													on  { new Date(post.postedon).toDateString() }
 												</p>
+												<hr />
 											</div>
 											
 										</div>
