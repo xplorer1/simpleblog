@@ -43,7 +43,7 @@ function Signup(req, res) {
 			let user = new User();
 
 			user.email = req.body.email;
-			user.name = req.body.username;
+			user.username = req.body.username;
 			user.password = req.body.password;
 			user.role = "guest";
 

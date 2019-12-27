@@ -85,7 +85,7 @@ class Posts extends React.Component {
 													</h3>
 												</Link>
 												<p className="post-meta">Posted by
-													<span href="#"> { post.owner } </span>
+													<span href="#"> { post.ownername } </span>
 													on  { new Date(post.postedon).toDateString() }
 												</p>
 												<hr />

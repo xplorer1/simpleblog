@@ -51,7 +51,7 @@ class Post extends React.Component {
                             <div className="post-heading">
                                 <h1>{this.state.postdata.posttitle}</h1>
                                 <span className="meta">Posted by
-                                    <a href="#"> {this.state.postdata.owner} </a>
+                                    <a href="#"> {this.state.postdata.ownername} </a>
                                 on {new Date(this.state.postdata.postedon).toDateString()}.</span>
                             </div>
                         </div>

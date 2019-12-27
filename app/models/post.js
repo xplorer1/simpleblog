@@ -15,6 +15,7 @@ let PostSchema = new Schema({
             message: '{VALUE} is not a valid email!'
         }
     },
+    'ownername' : { type: String },
     'postid' : { type: String },
     'posttitle' : { type: String },
     'postbody' : { type: String },
