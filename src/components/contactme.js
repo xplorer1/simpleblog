@@ -1,192 +1,160 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import {Loader, Utility} from "./home";
+import alertify from "alertifyjs";
+import store from "store";
 
 class ContactMe extends React.Component {
-	constructor(props) {
-		super(props);
+	constructor() {
+		super();
 
-		this.handleBlur = this.handleBlur.bind(this);
-		this.handleFocus = this.handleFocus.bind(this);
-		this.handleInput = this.handleInput.bind(this);
+        this.state = {
+            contactname: "",
+            contactemail: "",
+            contactmessage: "",
+            ajaxloading: false,
+        }
 	}
 
-	handleBlur() {
-		console.log("Yo man! I handle blur in this clutter of a site.")
+	handleSubmit = (e) => {
+		e.preventDefault();
+
+        if (!this.state.contactname) {
+            alertify.warning("We need your name. Please provide one.")
+        }
+        else if(!this.state.contactemail) {
+            alertify.warning("Hi, please enter your email address. How else will we get back to you?")
+        }
+        else if (!Utility.validmail(this.state.contactemail)) {
+            alertify.warning("Oooops! Such error. It appears your email address is not correct. Please check and try again.")
+        }
+        else if (!this.state.contactmessage) {
+            alertify.warning("Uhmmmmm. Why are you contacting us? Please tell us.")
+        }
+        else {
+
+            let data = {
+                contactname: this.state.contactname,
+                contactemail: this.state.contactemail,
+                contactmessage: this.state.contactmessage
+            }
+
+            this.setState({ ajaxloading: true }, () => {
+
+                fetch(Utility.baseurl + "contactme", {
+                        method: 'POST', 
+                        body: JSON.stringify(data),
+                        headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json',
+                        },
+                    })
+                    .then((response) => {
+                        this.setState({ajaxloading: false});
+                        return response.json();
+                    })
+                    .then((response) => {
+                        this.setState({ajaxloading: false}); 
+                        console.log("response: ", response);
+
+                        switch (response.data) {
+                            case "complaintname-required":
+                                alertify.warning("Please enter your name")
+                            break;
+
+                            case "complaintemail-required":
+                                alertify.warning("Please provide your email address")
+                            break;
+
+                            case "complaintmessage-required":
+                                alertify.warning("Please tell us why you are contacting us.")
+                            break;
+
+                            case "complaint-saved": 
+                                this.setState({
+                                    contactemail: "",
+                                    contactname: "",
+                                    contactmessage: ""
+                                })
+
+                                alertify.success("Your message was recived. We'll get back to you ASAP.") 
+                            break;
+
+                            case "user-notfound":
+                                alertify.error("Oops! Looks like your email address or password is wrong. Please check it or register if you don't have an account.")
+                            break;
+                        }                          
+                    })
+                    .catch((error) => {
+                        this.setState({ajaxloading: false});
+                        console.log("erro: ", error);
+                    }) 
+                })
+            }
 	}
 
-	handleFocus() {
-		console.log("Yo man! I handle focus in this clutter of a site.")
-	}
-
-	handleInput() {
-		console.log("Yo nigga! I handle all input in this clutter of a site.")
+	handleInput = (e) => {
+		this.setState({
+            [e.target.name]: e.target.value
+        });
 	}
 
 	render() {
 		return (
 			<article>
-				{/* Navigation */}
-				  <nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-				    <div className="container">
-				      <Link className="navbar-brand" to="/">My Blog</Link>
-				      <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-				        Menu
-				        <i className="fas fa-bars"></i>
-				      </button>
-				      <div className="collapse navbar-collapse" id="navbarResponsive">
-				        <ul className="navbar-nav ml-auto">
+				<Utility.nav />
 
-				          <li className="nav-item">
-				            <Link className="nav-link" to="/about">About</Link>
-				          </li>
+                <Utility.header image="contact-bg" title="Contact Me" sub="Have questions? I have answers." />
 
-				          <li className="nav-item">
-				            <Link className="nav-link" to="/contactme">Contact</Link>
-				          </li>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-lg-8 col-md-10 mx-auto">
+                            <p>Want to get in touch? Fill out the form below to send me a 
+                            message and I will get back to you as soon as possible!</p>
+                        
+                            <form name="sentMessage" id="contactForm" noValidate>
 
-				          <li className="nav-item">
-				            <Link className="nav-link" to="/signup">Sign Up</Link>
-				          </li>
-
-				          <li className="nav-item">
-							<a className="nav-link" data-toggle="modal" data-target="#myModal">Post to my blog?</a>
-						</li>
-
-				        </ul>
-				      </div>
-				    </div>
-				  </nav>
-
-				  <header className="masthead" style={{backgroundImage: "url('assets/img/contact-bg.jpg')"}}>
-				    <div className="overlay"></div>
-				    <div className="container">
-				      <div className="row">
-				        <div className="col-lg-8 col-md-10 mx-auto">
-				          <div className="page-heading">
-				            <h1>Contact Me</h1>
-				            <span className="subheading">Have questions? I have answers.</span>
-				          </div>
-				        </div>
-				      </div>
-				    </div>
-				  </header>
-
-  <div className="container">
-    <div className="row">
-      <div className="col-lg-8 col-md-10 mx-auto">
-        <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
-        {/* Contact Form - Enter your email address on line 19 of the mail/contact_me.php file to make this form work. */}
-        {/* WARNING: Some web hosts do not allow emails to be sent through forms to common mail hosts like Gmail or Yahoo. It's recommended that you use a private domain email address! */}
-        {/* To use the contact form, your site must be on a live web host with PHP! The form will not work locally! */}
-        <form name="sentMessage" id="contactForm" novalidate>
-          <div className="control-group">
-            <div className="form-group floating-label-form-group controls">
-              <label>Name</label>
-              <input type="text" className="form-control" placeholder="Name" 
-              id="name" required data-validation-required-message="Please enter your name." />
-              <p className="help-block text-danger"></p>
-            </div>
-          </div>
-          <div className="control-group">
-            <div className="form-group floating-label-form-group controls">
-              <label>Email Address</label>
-              <input type="email" className="form-control" placeholder="Email Address" 
-              id="email" required data-validation-required-message="Please enter your email address." />
-              <p className="help-block text-danger"></p>
-            </div>
-          </div>
-          <div className="control-group">
-            <div className="form-group col-xs-12 floating-label-form-group controls">
-              <label>Phone Number</label>
-              <input type="tel" className="form-control" placeholder="Phone Number" 
-              id="phone" required data-validation-required-message="Please enter your phone number." />
-              <p className="help-block text-danger"></p>
-            </div>
-          </div>
-          <div className="control-group">
-            <div className="form-group floating-label-form-group controls">
-              <label>Message</label>
-              <textarea rows="5" className="form-control" placeholder="Message" 
-              id="message" required data-validation-required-message="Please enter a message."></textarea>
-              <p className="help-block text-danger"></p>
-            </div>
-          </div>
-          <br />
-          <div id="success"></div>
-          <div className="form-group">
-            <button type="submit" className="btn btn-primary" id="sendMessageButton">Send</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <hr />
-
-  {/* Footer */}
-  <footer>
-    <div className="container">
-      <div className="row">
-        <div className="col-lg-8 col-md-10 mx-auto">
-          <ul className="list-inline text-center">
-            <li className="list-inline-item">
-              <a href="#">
-                <span className="fa-stack fa-lg">
-                  <i className="fas fa-circle fa-stack-2x"></i>
-                  <i className="fab fa-twitter fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">
-                <span className="fa-stack fa-lg">
-                  <i className="fas fa-circle fa-stack-2x"></i>
-                  <i className="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">
-                <span className="fa-stack fa-lg">
-                  <i className="fas fa-circle fa-stack-2x"></i>
-                  <i className="fab fa-github fa-stack-1x fa-inverse"></i>
-                </span>
-              </a>
-            </li>
-          </ul>
-          <p className="copyright text-muted">Copyright &copy; Your Website 2019</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  			<div id="myModal" className="modal fade" role="dialog">
-					<div className="modal-dialog">
-
-						<div className="modal-content">
-							<div className="modal-header">
-								<h5 className="modal-title" id="exampleModalLongTitle">Enter your password.</h5>
-								<button type="button" className="close" data-dismiss="modal" aria-label="Close">
-						          <span aria-hidden="true">&times;</span>
-						        </button>
-							</div>
-
-							<div className="modal-body">
-								<div className="">Are you registered? <br />Enter your password to write and publish.</div>
-
-								<div className="form-group">
-                                    <label htmlFor="your_pass"></label>
-                                    <input type="password" name="your_pass" id="your_pass" placeholder="Password" className="cust-btn" />
+                                <div className="control-group">
+                                    <div className="form-group floating-label-form-group controls">
+                                        <label>Name</label>
+                                        <input name="contactname" onChange={this.handleInput} value={this.state.contactname} type="text" className="form-control" placeholder="Name" 
+                                        id="name" />
+                                    </div>
                                 </div>
-							</div>
 
-							<div className="modal-footer">
-								<Link type="button" className="btn btn-primary" to="/createpost">Login</Link>
-								<button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
-							</div>
-						</div>
-					</div>
-				</div>
+                                <div className="control-group">
+                                    <div className="form-group floating-label-form-group controls">
+                                        <label>Email Address</label>
+                                        <input name="contactemail" onChange={this.handleInput} value={this.state.contactemail} type="email" className="form-control" placeholder="Email Address" 
+                                        id="email" />
+                                    </div>
+                                </div>
+
+                                <div className="control-group">
+
+                                    <div className="form-group floating-label-form-group controls">
+                                        <label>Message</label>
+                                        <textarea name="contactmessage" onChange={this.handleInput} value={this.state.contactmessage} rows="5" className="form-control" placeholder="Message" 
+                                        id="message" ></textarea>
+                                    </div>
+                                </div>
+                                <br />
+
+                                <div className="form-group">
+                                    <button type="submit" className="btn btn-primary" id="sendMessageButton" 
+                                    onClick={this.handleSubmit}>Send</button>
+                                    {this.state.ajaxloading ? Utility.ajaxloader() : <div></div>}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                {/* Footer */}
+                <Utility.footer />
+
 			</article>
 		)
 	}

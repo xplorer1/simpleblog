@@ -2,7 +2,7 @@ let mongoose = require('mongoose');
 let Schema = mongoose.Schema;
 
 let ComplaintsSchema = new Schema({
-    email: {
+    complaintemail: {
         type: String,
         lowercase: true,
         required: true,
@@ -13,8 +13,10 @@ let ComplaintsSchema = new Schema({
             message: '{VALUE} is not a valid email!'
     },
     },
-    createdon: {type: Date, default: Date.now },
-    complaint: {type: String},
+    createdon: {type: Date, default: Date.now() },
+    complaintname: {type: String},
+    complaintmessage: {type: String},
+    complaintstatus: {type: String}
 });
 
 module.exports = mongoose.model('Complaints', ComplaintsSchema);

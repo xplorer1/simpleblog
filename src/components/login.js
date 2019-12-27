@@ -24,10 +24,10 @@ class Login extends React.Component {
         e.preventDefault();
 
         if(!this.state.email) {
-            alert("Please enter email.");
+            alertify.warning("Hi, please enter your email address. Let us know who to log in.")
         }
         else if (!this.state.password) {
-            alert("Please enter password.");
+            alertify.warning("Uhmmm. We also need you to enter your email address. We need to be sure it's really you.")
         }
         else {
 

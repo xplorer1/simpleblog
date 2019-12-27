@@ -22,7 +22,7 @@ class Posts extends React.Component {
 				{this.state.showLoader === true && <Loader />}
 				<nav className="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
 					<div className="container-fluid">
-						<a className="navbar-brand" href="index.html">My Blog</a>
+						<Link className="navbar-brand" to="/">My Blog</Link>
 						<button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 							Menu
 							<i className="fas fa-bars"></i>
@@ -40,7 +40,7 @@ class Posts extends React.Component {
 								</li>
 
 								<li className="nav-item">
-									<a className="nav-link" data-toggle="modal" data-target="#myModal">Post to my blog?</a>
+									<Link className="nav-link" to="/login">Post to my blog?</Link>
 								</li>
 							</ul>
 						</div>
@@ -80,9 +80,9 @@ class Posts extends React.Component {
 													<h2 className="post-title">
 														{post.posttitle}
 													</h2>
-													<h3 className="post-subtitle">
+													<div className="post-subtitle">
 														{post.postbody.slice(0, 80)+ "..."}
-													</h3>
+													</div>
 												</Link>
 												<p className="post-meta">Posted by
 													<span href="#"> { post.ownername } </span>
@@ -103,6 +103,8 @@ class Posts extends React.Component {
 					</div>
 				</div>
 
+				<Utility.footer />
+
 			</section>
 		)
 	}
@@ -121,8 +123,13 @@ class Posts extends React.Component {
         })
         .then((response) => {
 
-            store.set("posts", response.data);
-            this.setState({postsdata: response.data});
+        	let sortedposts = response.data.sort(function (obj1, obj2) {
+                return new Date(obj1.postedon) - new Date(obj2.postedon);
+            });
+
+            store.set("posts", sortedposts);
+
+            this.setState({postsdata: sortedposts});
 
             this.setState({showLoader: false})
         })

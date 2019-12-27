@@ -3,6 +3,7 @@ const app = express();
 const apirouter = express.Router();
 const User = require("../models/user");
 const Post = require("../models/post");
+const Complaint = require("../models/contact")
 const config = require('../../config');
 const mailer = require('../routes/mail');
 const jwt = require('jsonwebtoken');
@@ -25,6 +26,7 @@ apirouter.use(function(req, res, next) {
 apirouter.post('/signup', Signup);
 apirouter.post('/savepost', SavePost);
 apirouter.post('/login', Login);
+apirouter.post('/contactme', ContactMe);
 apirouter.get('/allposts', AllPosts);
 
 function Signup(req, res) {
@@ -102,7 +104,12 @@ function SavePost(req, res) {
             			if(req.body.postmedia) {
             				cloudinary.uploader.upload(req.body.postmedia, 
             				{public_id: postid, overwrite: true}, (error, result) => {
-            					if(error) console.log("error: ", error.message);
+            					if(error) {
+            						console.log("error: ", error.message);
+            						if(error.message === "getaddrinfo ENOTFOUND api.cloudinary.com") {
+            							return res.json({status: false, data: "network"})
+            						}
+            					}
 
             					if(result) {
             						let post = new Post();
@@ -192,6 +199,34 @@ function AllPosts(req, res) {
 		if(posts) return res.json({status: true, data: posts});
 
 	})
+}
+
+function ContactMe(req, res) {
+	if(!req.body.contactname) return res.json({status: false, data: "complaintname-required"});
+    if(!req.body.contactemail) return res.json({status: false, data: "complaintemail-required"});
+    if(!req.body.contactmessage) return res.json({status: false, data: "complaintmessage-required"});
+
+    let complaint = new Complaint();
+
+    complaint.complaintemail = req.body.contactemail;
+    complaint.complaintname = req.body.contactname;
+    complaint.complaintmessage = req.body.contactmessage;
+    complaint.complaintstatus = "Pending";
+
+    complaint.save((err, success) => {
+
+        if(err) {
+            console.log("Error saving complaint. ", err.message);
+            return res.json({status: false, data: err.message});
+        }
+        else if(success) {
+            //mailer.sendComplaintRecieptMail(req.body.email);
+
+            //mailer.sendComplaintMail(req.body.name, req.body.email, req.body.complaint, corporatemail);
+
+            return res.json({status: true, data: "complaint-saved"});
+        }
+    });
 }
 
 module.exports = apirouter;

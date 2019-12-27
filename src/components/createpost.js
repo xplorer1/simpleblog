@@ -88,6 +88,10 @@ class CreatePost extends React.Component {
                                 )
                             break;
 
+                            case "network" :
+                                alertify.warning("Ooops! Looks like you are not connected to the internet. Please check your network and try again.")
+                            break;
+
                             case "post-saved": 
                                 alertify.notify('Post has been successfully saved.', 'success', 5, 
                                     function () {     
@@ -121,13 +125,15 @@ class CreatePost extends React.Component {
         let file = e.target.files[0];
         let reader = new FileReader();
 
-        reader.readAsDataURL (file);
+        if(file) {
+            reader.readAsDataURL (file);
 
-        reader.onloadend = function() {
-            this.setState({
-                postmedia: reader.result
-            });
-        }.bind(this);
+            reader.onloadend = function() {
+                this.setState({
+                    postmedia: reader.result
+                });
+            }.bind(this);
+        }
     }
 
     handleInputClear(e) {
