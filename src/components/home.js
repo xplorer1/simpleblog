@@ -207,7 +207,8 @@ class StatikComponent extends React.Component {
 					<div className="container">
 						<div className="row">
 							<div className="col-lg-8 col-md-10 mx-auto">
-							  <ul className="list-inline text-center">
+
+							  {/*<ul className="list-inline text-center">
 							    <li className="list-inline-item">
 							      <a href="#">
 							        <span className="fa-stack fa-lg">
@@ -232,7 +233,8 @@ class StatikComponent extends React.Component {
 							        </span>
 							      </a>
 							    </li>
-							  </ul>
+							  </ul>*/}
+							  
 							  <p className="copyright text-muted">Copyright &copy; Chijioke 2019</p>
 							</div>
 						</div>
