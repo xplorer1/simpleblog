@@ -85,6 +85,7 @@ class Login extends React.Component {
                     })
                     .catch((error) => {
                         this.setState({ajaxloading: false});
+						alertify.warning("Sorry. There has been a problem. Please try again later.")
                         console.log("erro: ", error);
                     }) 
                 })
